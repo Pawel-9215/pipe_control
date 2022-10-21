@@ -1,6 +1,8 @@
 import socket
 import json
 from json.decoder import JSONDecodeError
+import datetime
+import pickle
 
 HEADERSIZE = 10
 print('provide server ip or choose one from the list:\n')
@@ -40,10 +42,35 @@ print(f"Connecting to server {server_ip}")
 client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_sock.connect((server_ip, port))
 
-msg = client_sock.recv(1024)
-print(msg.decode("utf-8"))
-msg = client_sock.recv(1024)
-print(msg.decode("utf-8"))
-msg = "message recieved"
-client_sock.send(bytes(msg, 'utf-8'))
-input("is it done?")
+def recieve_text_message():
+    full_msg = ''
+    new_msg = True
+    while True:
+        msg = client_sock.recv(16)
+        if new_msg:
+            print('new msg recieving:  ---  ', msg[:HEADERSIZE].decode('utf-8'))
+            msg_len = int(msg[:HEADERSIZE])
+            new_msg = False
+            #print(f"new message len is --- {msg_len}")
+
+        full_msg += msg.decode('utf-8')
+
+        #print(full_msg)
+
+        if len(full_msg) - HEADERSIZE == msg_len:
+            #print("got full mesage")
+            #print(full_msg)
+            new_msg = True
+            return full_msg
+
+def send_data(my_data):
+    msg = {"name": socket.gethostname(), "date": str(datetime.datetime.today()), "message": my_data}
+    package = pickle.dumps(msg)
+    package = bytes(f"{len(package):<{HEADERSIZE}}", 'utf-8')+package
+    client_sock.send(package)
+
+print(recieve_text_message())
+
+while True:
+    message = input()
+    send_data(message)

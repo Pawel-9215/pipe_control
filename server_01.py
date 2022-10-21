@@ -1,4 +1,6 @@
 import socket
+import pickle
+from struct import pack
 
 HEADERSIZE = 10
 my_ip = ""
@@ -15,10 +17,29 @@ print(my_ip)
 server_sock.bind((host_ip, port))
 server_sock.listen(5)
 
+client_sock, address = server_sock.accept()
+print(f"connection from {address} established")
+
+def send_text_message(message):
+    message = f"{len(message):<{HEADERSIZE}}"+message
+    client_sock.send(bytes(message, 'utf-8'))
+
+send_text_message("Welcome to the server")
+
+def recieve_data():
+    package = b''
+    new_input = True
+    while True:
+        buffer = client_sock.recv(16)
+        if new_input:
+            buffer_size = int(buffer[:HEADERSIZE])
+            new_input = False
+
+        package += buffer
+
+        if len(package) - HEADERSIZE == buffer_size:
+            return pickle.loads(package[HEADERSIZE:])
+
 while True:
-    client_sock, address = server_sock.accept()
-    print(f"connection from {address} established")
-    client_sock.send(bytes("Welcome to the server", 'utf-8'))
-    client_sock.send(bytes("New message", 'utf-8'))
-    new_msg = client_sock.recv(1024)
-    print(new_msg.decode('utf-8'))
+    incoming = recieve_data()
+    print(f"{incoming['name']} | {incoming['date']} : \n {incoming['message']}")
