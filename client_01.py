@@ -2,7 +2,7 @@ import socket
 import json
 from json.decoder import JSONDecodeError
 
-
+HEADERSIZE = 10
 print('provide server ip or choose one from the list:\n')
 server_ip = ""
 port = 9998
@@ -44,4 +44,6 @@ msg = client_sock.recv(1024)
 print(msg.decode("utf-8"))
 msg = client_sock.recv(1024)
 print(msg.decode("utf-8"))
+msg = "message recieved"
+client_sock.send(bytes(msg, 'utf-8'))
 input("is it done?")
