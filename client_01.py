@@ -3,6 +3,18 @@ import json
 from json.decoder import JSONDecodeError
 import datetime
 import pickle
+from settings import *
+
+import pygame
+from pygame.locals import *
+import sys
+
+
+screen = pygame.display.set_mode((800, 600), HWSURFACE|DOUBLEBUF|RESIZABLE|SCALED)
+clock = pygame.time.Clock()
+running = True
+
+pygame.display.set_caption('RC car')
 
 HEADERSIZE = 10
 print('provide server ip or choose one from the list:\n')
@@ -46,7 +58,7 @@ def recieve_text_message():
     full_msg = ''
     new_msg = True
     while True:
-        msg = client_sock.recv(16)
+        msg = client_sock.recv(DATA_CHUNK)
         if new_msg:
             print('new msg recieving:  ---  ', msg[:HEADERSIZE].decode('utf-8'))
             msg_len = int(msg[:HEADERSIZE])
@@ -69,8 +81,35 @@ def send_data(my_data):
     package = bytes(f"{len(package):<{HEADERSIZE}}", 'utf-8')+package
     client_sock.send(package)
 
+def recieve_data():
+    package = b''
+    new_input = True
+    while True:
+        buffer = client_sock.recv(DATA_CHUNK)
+        if new_input:
+            buffer_size = int(buffer[:HEADERSIZE])
+            new_input = False
+
+        package += buffer
+
+        if len(package) - HEADERSIZE == buffer_size:
+            return pickle.loads(package[HEADERSIZE:])
+
 print(recieve_text_message())
 
 while True:
     message = "All engines stop"
     send_data(message)
+    incoming = recieve_data()
+    for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                
+    screen.fill('#3D897B')
+
+    img = pygame.image.fromstring(incoming['message'],(640,480),"RGB")
+    screen.blit(img,(0,0))
+
+    pygame.display.update()
+    #self.clock.tick(60)

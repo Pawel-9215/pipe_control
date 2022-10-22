@@ -1,6 +1,9 @@
 import socket
 import pickle
+import camera_01
 from struct import pack
+
+from settings import *
 
 HEADERSIZE = 10
 my_ip = ""
@@ -30,7 +33,7 @@ def recieve_data():
     package = b''
     new_input = True
     while True:
-        buffer = client_sock.recv(16)
+        buffer = client_sock.recv(DATA_CHUNK)
         if new_input:
             buffer_size = int(buffer[:HEADERSIZE])
             new_input = False
@@ -40,6 +43,14 @@ def recieve_data():
         if len(package) - HEADERSIZE == buffer_size:
             return pickle.loads(package[HEADERSIZE:])
 
+def send_data(my_data):
+    msg = {"name": host_name, "message": my_data}
+    package = pickle.dumps(msg)
+    package = bytes(f"{len(package):<{HEADERSIZE}}", 'utf-8')+package
+    client_sock.send(package)
+
 while True:
     incoming = recieve_data()
-    print(f"{incoming['name']} | {incoming['date']} : \n {incoming['message']}")
+    #print(f"{incoming['name']} | {incoming['date']} : \n {incoming['message']}")
+    camera_image = camera_01.get_frame() 
+    send_data(camera_image)
