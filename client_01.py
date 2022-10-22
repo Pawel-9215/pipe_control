@@ -72,5 +72,5 @@ def send_data(my_data):
 print(recieve_text_message())
 
 while True:
-    message = input()
+    message = "All engines stop"
     send_data(message)
