@@ -6,38 +6,20 @@ from settings import *
 from debug import debug
 
 
-class Engine:
-    """Main game class sitting on top of everything else
-    """
-
+class GamePad():
     def __init__(self) -> None:
 
-        # general setup for pygameq
-        self.screen = pygame.display.set_mode(RESOLUTION, HWSURFACE|DOUBLEBUF|RESIZABLE|SCALED)
-        self.clock = pygame.time.Clock()
-        self.running = True
+        if not pygame.joystick.get_init:
+            pygame.joystick.init()
+        if pygame.joystick.get_count() > 0:
+            self.gamepad_connected = True
+            self.gamepad = pygame.joystick.Joystick(0)
+            print(self.gamepad.get_name())
+            print(self.gamepad.get_numaxes())
 
-        pygame.display.set_caption(TITLE)
-
-        #gamepad
-        print(pygame.joystick.get_count())
-        self.gamepad = pygame.joystick.Joystick(0)
-        print(self.gamepad.get_name())
-        print(self.gamepad.get_numaxes())
-
-    def run(self):
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                
-            self.screen.fill('#3D897B')
-            self.getaxes()
-            
-            debug(self.clock.get_fps())
-            pygame.display.update()
-            self.clock.tick(FPS)
+        self.gamepad_mapping = 'a'
+        self.gamepad_mappings = {'a':{'direction':0, 'acceleration':5, 'reverse':2},
+                                'b':{'direction':0, 'acceleration':5, 'reverse':4}}
 
     def getaxes(self):
         start_y_debug = 32
@@ -46,7 +28,4 @@ class Engine:
         for i in range(all_axes):
             debug(f"axin no: {i}, position: {self.gamepad.get_axis(i)}", y=start_y_debug+i*30, x=15)
 
-
-if __name__ == '__main__':
-    game = Engine()
-    game.run()
+    
