@@ -1,4 +1,5 @@
 TITLE = "wifi robot controll"
 DATA_CHUNK = 2048
 RESOLUTION = (1024, 768)
-FPS = 120
+FPS = 1200
+GAMEPAD_DEADZONE = 0.08
