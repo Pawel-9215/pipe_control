@@ -53,7 +53,7 @@ class GamePad():
 
         axes = {'steering': steering, 'acceleration': acceleration, 'reverse': reverse}
 
-        debug(f"steering: {steering:>5}, acceleration: {acceleration:>5}, reverse: {reverse:>5}", y=15, x=15)
+        # debug(f"steering: {steering:>5}, acceleration: {acceleration:>5}, reverse: {reverse:>5}", y=15, x=15)
 
         return axes
 
