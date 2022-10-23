@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-font = pygame.font.Font('ShareTechMono-Regular.ttf', 16)
+font = pygame.font.Font('ShareTechMono-Regular.ttf', 26)
 
 def debug(info, y = 10, x = 10):
     display_surface = pygame.display.get_surface()

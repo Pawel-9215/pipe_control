@@ -24,6 +24,7 @@ class Engine:
 
         #gamepad
         self.gamepad = gamepad.GamePad()
+        self.axes_data = {'steering': 0, 'acceleration': 0, 'reverse': 0}
 
         #hud
         self.hud = hud.Hud(self.screen)
@@ -37,9 +38,9 @@ class Engine:
                 
             self.screen.fill('#3D897B')
             if self.gamepad.gamepad_connected:
-                self.gamepad.getaxes()
+                self.axes = self.gamepad.getaxes()
             self.gamepad.keyboard_input()
-            self.hud.draw_hud()
+            self.hud.draw_hud(self.axes)
             #debug(self.clock.get_fps())
             pygame.display.update()
             #self.clock.tick(FPS)
