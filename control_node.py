@@ -7,6 +7,7 @@ import gamepad
 
 from settings import *
 from debug import debug
+import hud
 
 
 class Engine:
@@ -24,6 +25,9 @@ class Engine:
         #gamepad
         self.gamepad = gamepad.GamePad()
 
+        #hud
+        self.hud = hud.Hud(self.screen)
+
     def run(self):
         while True:
             for event in pygame.event.get():
@@ -35,7 +39,7 @@ class Engine:
             if self.gamepad.gamepad_connected:
                 self.gamepad.getaxes()
             self.gamepad.keyboard_input()
-            
+            self.hud.draw_hud()
             #debug(self.clock.get_fps())
             pygame.display.update()
             #self.clock.tick(FPS)
