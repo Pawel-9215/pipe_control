@@ -3,6 +3,7 @@
 import pygame
 from pygame.locals import *
 import sys
+import gamepad
 
 from settings import *
 from debug import debug
@@ -18,15 +19,10 @@ class Engine:
         self.screen = pygame.display.set_mode(RESOLUTION, HWSURFACE|DOUBLEBUF|RESIZABLE|SCALED)
         #self.clock = pygame.time.Clock()
         self.running = True
-        self.gamepad_connected = False
         pygame.display.set_caption(TITLE)
 
         #gamepad
-        if pygame.joystick.get_count() > 0:
-            self.gamepad_connected = True
-            self.gamepad = pygame.joystick.Joystick(0)
-            print(self.gamepad.get_name())
-            print(self.gamepad.get_numaxes())
+        self.gamepad = gamepad.GamePad()
 
     def run(self):
         while True:
@@ -36,19 +32,15 @@ class Engine:
                     sys.exit()
                 
             self.screen.fill('#3D897B')
-            if self.gamepad_connected:
-                self.getaxes()
+            if self.gamepad.gamepad_connected:
+                self.gamepad.getaxes()
+            self.gamepad.keyboard_input()
             
             #debug(self.clock.get_fps())
             pygame.display.update()
             #self.clock.tick(FPS)
 
-    def getaxes(self):
-        start_y_debug = 32
-        all_axes = self.gamepad.get_numaxes()
-
-        for i in range(all_axes):
-            debug(f"axin no: {i}, position: {self.gamepad.get_axis(i)}", y=start_y_debug+i*30, x=15)
+    
 
 
 if __name__ == '__main__':
