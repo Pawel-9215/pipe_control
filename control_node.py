@@ -3,8 +3,10 @@
 import pygame
 from pygame.locals import *
 import sys
-import gamepad
+import socket
+import pickle
 
+import gamepad
 from settings import *
 from debug import debug
 import hud
@@ -15,6 +17,10 @@ class Engine:
     """
 
     def __init__(self) -> None:
+
+        #set the server
+        self.server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
         # general setup for pygameq
         self.screen = pygame.display.set_mode(RESOLUTION, HWSURFACE|DOUBLEBUF|RESIZABLE|SCALED)
@@ -44,6 +50,14 @@ class Engine:
             #debug(self.clock.get_fps())
             pygame.display.update()
             #self.clock.tick(FPS)
+
+    def get_ip(self):
+        my_ip = ""
+        host_name = socket.gethostname()
+        host_ip = socket.gethostbyname(host_name)
+        print("Is this your ip?: ")
+
+
 
     
 
