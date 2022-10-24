@@ -108,10 +108,10 @@ class Engine:
         img = pygame.image.fromstring(all_data['cam_feed'], 
                                      (640, 480),
                                      'RGB')
-        img_scaled = pygame.Surface(RESOLUTION)
-        #pygame.transform.scale(img, RESOLUTION, img_scaled)
+        #img_scaled = pygame.Surface(RESOLUTION)
+        img_scaled = pygame.transform.scale(img, RESOLUTION)
 
-        self.screen.blit(img, (0,0))
+        self.screen.blit(img_scaled, (0,0))
 
 if __name__ == '__main__':
     engine = Engine()
