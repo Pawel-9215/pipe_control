@@ -91,7 +91,7 @@ while True:
     send_data({'cam_feed': camera_image})
     incoming = recieve_data()
     servo_control.set_input_params(incoming)
-    for event in pygame.event.get():
+    """for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    sys.exit()
+                    sys.exit()"""
