@@ -19,6 +19,7 @@ class GamePad():
             print(self.gamepad.get_numaxes())
         else:
             self.gamepad_connected = False
+            print("no gamepad detected!")
 
         # for some reason linux and windows chave different mappings
         self.gamepad_mapping = 'b'
