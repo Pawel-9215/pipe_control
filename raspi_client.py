@@ -7,6 +7,7 @@ import pickle
 from settings import *
 from support import *
 import camera_01
+import servo_control
 
 import pygame
 from pygame.locals import *
@@ -89,6 +90,7 @@ while True:
         # print('camera not ok')
     send_data({'cam_feed': camera_image})
     incoming = recieve_data()
+    servo_control.set_input_params(incoming)
     for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
