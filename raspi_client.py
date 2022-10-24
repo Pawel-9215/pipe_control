@@ -50,7 +50,7 @@ print(f"Connecting to server {server_ip}")
 
 
 client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_sock.connect((server_ip, port))
+client_sock.connect((server_ip, PORT))
 
 def send_data(my_data):
     msg = my_data

@@ -4,7 +4,7 @@ from numpy import interp
 
 # setup
 servo_1 = HardwarePWM(pwm_channel=0, hz=50)
-servo_1.start(100)
+servo_1.start()
 
 def set_steering(steering_val):
     duty = interp(steering_val, [-255, 255], [2.5, 10.5])
