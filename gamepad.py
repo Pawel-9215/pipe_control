@@ -17,6 +17,8 @@ class GamePad():
             self.gamepad = pygame.joystick.Joystick(0)
             print(self.gamepad.get_name())
             print(self.gamepad.get_numaxes())
+        else:
+            self.gamepad_connected = False
 
         # for some reason linux and windows chave different mappings
         self.gamepad_mapping = 'b'

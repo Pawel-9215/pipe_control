@@ -7,7 +7,13 @@ from pygame.locals import *
 
 pygame.init()
 pygame.camera.init()
-cam = pygame.camera.Camera("/dev/video0",(640,480))
+
+camera_initiaized = False
+try:
+    cam = pygame.camera.Camera("/dev/video0",(640,480))
+    camera_initiaized = True
+except:
+    pass
 cam.start()
 
 

@@ -6,6 +6,7 @@ import sys
 import socket
 import pickle
 
+
 import gamepad
 from settings import *
 from debug import debug
@@ -20,7 +21,15 @@ class Engine:
 
         #set the server
         self.server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_ip = self.get_ip()
+        self.server_sock.bind((self.server_ip, PORT))
 
+        print('awaiting connection...')
+        self.server_sock.listen(5)
+        self.client_sock, self.address = self.server_sock.accept()
+        print(f"connection from {self.address} established")
+
+        self.send_data({'message': "Welcome to the server"})
 
         # general setup for pygameq
         self.screen = pygame.display.set_mode(RESOLUTION, HWSURFACE|DOUBLEBUF|RESIZABLE|SCALED)
@@ -34,6 +43,7 @@ class Engine:
 
         #hud
         self.hud = hud.Hud(self.screen)
+        self.hud.client_name = self.address
 
     def run(self):
         while True:
@@ -44,9 +54,11 @@ class Engine:
                 
             self.screen.fill('#3D897B')
             if self.gamepad.gamepad_connected:
-                self.axes = self.gamepad.getaxes()
+                self.axes_data = self.gamepad.getaxes()
             self.gamepad.keyboard_input()
-            self.hud.draw_hud(self.axes)
+            self.display_feed(self.recieve_data())
+            self.hud.draw_hud(self.axes_data)
+            self.send_data(self.axes_data)
             #debug(self.clock.get_fps())
             pygame.display.update()
             #self.clock.tick(FPS)
@@ -55,12 +67,51 @@ class Engine:
         my_ip = ""
         host_name = socket.gethostname()
         host_ip = socket.gethostbyname(host_name)
-        print("Is this your ip?: ")
+        answer = ''
+        while answer not in ['y', 'n']:
+            answer = print(f"Is this your ip? [y/n]: {host_ip}")
+            answer = input()
+        if answer == 'y':
+            my_ip = host_ip
+            return my_ip
+        elif answer == 'n':
+            print('provide your ip:')
+            answer = input()
+            my_ip = answer
+        return my_ip
 
+    def recieve_data(self):
+        package = b''
+        new_input = True
+        while True:
+            buffer = self.client_sock.recv(DATA_CHUNK)
+            if new_input:
+                buffer_size = int(buffer[:HEADERSIZE])
+                new_input = False
 
+            package += buffer
 
-    
+            if len(package) - HEADERSIZE == buffer_size:
+                return pickle.loads(package[HEADERSIZE:])
 
+    def send_data(self, my_data: dict):
+        msg = my_data
+        package = pickle.dumps(msg)
+        package = bytes(f"{len(package):<{HEADERSIZE}}", 'utf-8')+package
+        self.client_sock.send(package)
+
+    def display_feed(self, feed):
+
+        all_data = feed
+        #self.screen.fill('black')
+        # print(all_data)
+        img = pygame.image.fromstring(all_data['cam_feed'], 
+                                     (640, 480),
+                                     'RGB')
+        img_scaled = pygame.Surface(RESOLUTION)
+        #pygame.transform.scale(img, RESOLUTION, img_scaled)
+
+        self.screen.blit(img, (0,0))
 
 if __name__ == '__main__':
     engine = Engine()
