@@ -5,7 +5,7 @@ from struct import pack
 
 from settings import *
 
-HEADERSIZE = 10
+
 my_ip = ""
 
 server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
