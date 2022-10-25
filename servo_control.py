@@ -14,19 +14,19 @@ def set_steering(steering_val):
     servo_1.change_duty_cycle(duty)
 
 def set_movement(acc_val, rev_val):
-    print(acc_val, "------------   ", rev_val)
     if acc_val > 0 and rev_val == 0:
         speed =  acc_val
-        pass # set forward pin
+        # set forward pin
     elif acc_val == 0 and rev_val > 0:
         speed = rev_val
-        pass # set backward pin
+        # set backward pin
     else:
         speed = 0
     
     engines.change_duty_cycle(interp(speed, [0, 255], [0, 100]))
 
 def set_input_params(input_params):
+    print(input_params)
     set_steering(input_params['steering'])
     set_movement(input_params['acceleration'], input_params['reverse'])
 
