@@ -17,7 +17,7 @@ def set_movement(acc_val, rev_val):
     if acc_val > 0 and rev_val == 0:
         speed =  acc_val
         pass # set forward pin
-    if acc_val == 0 and rev_val >= 0:
+    elif acc_val == 0 and rev_val > 0:
         speed = rev_val
         pass # set backward pin
     else:
