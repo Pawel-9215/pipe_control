@@ -23,7 +23,7 @@ def set_movement(acc_val, rev_val):
     else:
         speed = 0
     
-    engines.change_duty_cycle(interp(steering, [0, 255], [0, 100]))
+    engines.change_duty_cycle(interp(speed, [0, 255], [0, 100]))
 
 def set_input_params(input_params):
     set_steering(input_params['steering'])
