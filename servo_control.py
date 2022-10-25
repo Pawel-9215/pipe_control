@@ -14,10 +14,10 @@ def set_steering(steering_val):
     servo_1.change_duty_cycle(duty)
 
 def set_movement(acc_val, rev_val):
-    if acc_val > 0 and rev_val == 0:
+    if acc_val > 2 and rev_val < 2:
         speed =  acc_val
         # set forward pin
-    elif acc_val == 0 and rev_val > 0:
+    elif acc_val < 2 and rev_val > 2:
         speed = rev_val
         # set backward pin
     else:
