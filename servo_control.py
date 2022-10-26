@@ -1,6 +1,8 @@
 from rpi_hardware_pwm import HardwarePWM
+import RPi.GPIO
 import time
 from numpy import interp
+GPIO.setwarnings(False) 
 
 # setup
 servo_1 = HardwarePWM(pwm_channel=0, hz=50)
@@ -9,16 +11,29 @@ servo_1.start(6.5)
 engines = HardwarePWM(pwm_channel=1, hz=60)
 engines.start(0)
 
+foward = 17
+GPIO.setmode(GPIO.BCM) 
+
+forward = 27
+backward = 22
+
+GPIO.setup(forward, GPIO.OUT)
+GPIO.setup(backward, GPIO.OUT) 
+
 def set_steering(steering_val):
     duty = interp(steering_val, [-255, 255], [2.5, 10.5])
     servo_1.change_duty_cycle(duty)
 
 def set_movement(acc_val, rev_val):
-    if acc_val > 2 and rev_val < 2:
+    if acc_val > 2 and rev_val == 0:
         speed =  acc_val
+        GPIO.output(backward, False)
+        GPIO.output(forward, True)
         # set forward pin
-    elif acc_val < 2 and rev_val > 2:
+    elif acc_val == 0 and rev_val > 2:
         speed = rev_val
+        GPIO.output(forward, False)
+        GPIO.output(backward, True)
         # set backward pin
     else:
         speed = 0
