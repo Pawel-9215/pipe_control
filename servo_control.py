@@ -11,7 +11,6 @@ servo_1.start(6.5)
 engines = HardwarePWM(pwm_channel=1, hz=60)
 engines.start(0)
 
-foward = 17
 GPIO.setmode(GPIO.BCM) 
 
 forward = 27
@@ -41,7 +40,7 @@ def set_movement(acc_val, rev_val):
     engines.change_duty_cycle(interp(speed, [0, 255], [0, 100]))
 
 def set_input_params(input_params):
-    print(input_params)
+    # print(input_params)
     set_steering(input_params['steering'])
     set_movement(input_params['acceleration'], input_params['reverse'])
 
