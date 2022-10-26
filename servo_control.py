@@ -1,5 +1,5 @@
 from rpi_hardware_pwm import HardwarePWM
-import RPi.GPIO
+import RPi.GPIO as GPIO 
 import time
 from numpy import interp
 GPIO.setwarnings(False) 
