@@ -20,7 +20,7 @@ GPIO.setup(forward, GPIO.OUT)
 GPIO.setup(backward, GPIO.OUT) 
 
 def set_steering(steering_val):
-    duty = interp(steering_val, [-255, 255], [2.5, 10.5])
+    duty = interp(steering_val, [-255, 255], [3, 11])
     servo_1.change_duty_cycle(duty)
 
 def set_movement(acc_val, rev_val):
