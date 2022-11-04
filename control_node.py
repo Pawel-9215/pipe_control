@@ -19,7 +19,7 @@ class Engine:
 
     def __init__(self) -> None:
 
-        self.local_debug = True
+        self.local_debug = False
 
         if not self.local_debug:
             #set the server
