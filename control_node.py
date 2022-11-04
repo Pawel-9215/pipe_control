@@ -19,17 +19,20 @@ class Engine:
 
     def __init__(self) -> None:
 
-        #set the server
-        self.server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_ip = self.get_ip()
-        self.server_sock.bind((self.server_ip, PORT))
+        self.local_debug = True
 
-        print('awaiting connection...')
-        self.server_sock.listen(5)
-        self.client_sock, self.address = self.server_sock.accept()
-        print(f"connection from {self.address} established")
+        if not self.local_debug:
+            #set the server
+            self.server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server_ip = self.get_ip()
+            self.server_sock.bind((self.server_ip, PORT))
 
-        self.send_data({'message': "Welcome to the server"})
+            print('awaiting connection...')
+            self.server_sock.listen(5)
+            self.client_sock, self.address = self.server_sock.accept()
+            print(f"connection from {self.address} established")
+
+            self.send_data({'message': "Welcome to the server"})
 
         # general setup for pygameq
         self.screen = pygame.display.set_mode(RESOLUTION, HWSURFACE|DOUBLEBUF|RESIZABLE|SCALED)
@@ -43,7 +46,8 @@ class Engine:
 
         #hud
         self.hud = hud.Hud(self.screen)
-        self.hud.client_name = self.address
+        if not self.local_debug:
+            self.hud.client_name = self.address
 
     def run(self):
         while True:
@@ -56,9 +60,11 @@ class Engine:
             if self.gamepad.gamepad_connected:
                 self.axes_data = self.gamepad.getaxes()
             self.gamepad.keyboard_input()
-            self.display_feed(self.recieve_data())
+            if not self.local_debug:
+                self.display_feed(self.recieve_data())
             self.hud.draw_hud(self.axes_data)
-            self.send_data(self.axes_data)
+            if not self.local_debug:
+                self.send_data(self.axes_data)
             #debug(self.clock.get_fps())
             pygame.display.update()
             #self.clock.tick(FPS)
