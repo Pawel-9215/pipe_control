@@ -3,12 +3,19 @@ from pygame.locals import *
 import sys
 
 from settings import *
+from support import *
 from support import lerp
 from debug import debug
 
 
 class GamePad():
     def __init__(self) -> None:
+
+        # smooth movement
+        self.current_steering = 0
+        self.current_acceleration = 0
+        self.current_reverse = 0
+        self.uni_step = 0.1
 
         if not pygame.joystick.get_init:
             pygame.joystick.init()
@@ -53,8 +60,12 @@ class GamePad():
             steering = int(lerp(-255, 255, ((ster_pos+1)/2)))
         else:
             steering = 0
+        
+        self.current_steering = move_towards(self.current_steering, steering, self.uni_step, self.uni_step*2)
+        self.current_acceleration = move_towards(self.current_acceleration, acceleration, self.uni_step, self.uni_step*2)
+        self.current_reverse = move_towards(self.current_reverse, reverse, self.uni_step, self.uni_step*2)
 
-        axes = {'steering': steering, 'acceleration': acceleration, 'reverse': reverse}
+        axes = {'steering': self.current_steering, 'acceleration': self.current_acceleration, 'reverse': self.current_reverse}
 
         # debug(f"steering: {steering:>5}, acceleration: {acceleration:>5}, reverse: {reverse:>5}", y=15, x=15)
 
