@@ -15,7 +15,7 @@ class GamePad():
         self.current_steering = 0
         self.current_acceleration = 0
         self.current_reverse = 0
-        self.uni_step = 0.1
+        self.uni_step = 20
 
         if not pygame.joystick.get_init:
             pygame.joystick.init()
