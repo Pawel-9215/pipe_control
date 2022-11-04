@@ -39,6 +39,7 @@ def move_towards(a: float, b:float, step:float, margin:float):
         a (float): move from this value
         b (float): toward this value
         step (float): by this step
+        margin (float): how close a to b needs to be
     """
     if abs(a-b) < margin:
         return b
